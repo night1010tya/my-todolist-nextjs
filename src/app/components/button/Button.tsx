@@ -3,9 +3,10 @@ type ButtonProps = {
     type?: "button" | "submit" | "reset";
   };
   
-  export const Button = ({ children }: ButtonProps) => {
+  export const Button = ({ children, type}: ButtonProps) => {
     return (
       <button
+      type={type}
         className="
           bg-gray-700
           text-white

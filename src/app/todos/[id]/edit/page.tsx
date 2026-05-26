@@ -1,32 +1,27 @@
 import { supabase } from "@/lib/supabase";
 import type { Todo } from "@/types/todo";
-import { TodoDetail } from "@/app/components/pages/TodoDetail";
+import { TodoForm } from "@/app/components/pages/TodoForm";
 
 type Props = {
-    params: Promise<{
-      id: string;
-    }>;
-  };
+  params: Promise<{
+    id: string;
+  }>;
+};
 
-export default async function TodoDetailPage({ params }: Props) {
-
-    const { id } = await params;
+export default async function EditTodoPage({ params }: Props) {
+  const { id } = await params;
 
   const { data, error } = await supabase
     .from("todos")
     .select("*")
     .eq("id", Number(id))
     .single();
-    console.log(id);
-console.log(error);
-console.log(data);
 
   if (error || !data) {
     return <p>TODOが見つかりませんでした</p>;
-
   }
 
   const todo: Todo = data;
 
-  return <TodoDetail todo={todo} />;
+  return <TodoForm mode="edit" todo={todo} />;
 }

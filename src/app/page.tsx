@@ -1,19 +1,20 @@
 
-import { Todo } from "@/types/todo";
+import { Todo, TodoListItem } from "@/types/todo";
 import { TodoList } from "./components/pages/TodoList";
+import { supabase } from "@/lib/supabase";
 
-const todos:Todo[] = [
-  {
-    id: 1,
-    title: "買い物",
-    content: "牛乳を買う",
-    status: "todo",
-    startDate: "2026-05-24",
-    limitDate: "2026-05-31",
-  },
-];
 
-export default function TodosPage() {
+export default async function TodosPage(){
+  const {data,error} = await supabase
+  .from("todos")
+  .select("id,title,status,dueDate")
+  .order("id",{ascending:true})
+  if(error){
+    console.log(error)
+  }
+
+  const todos:TodoListItem[]=data??[]
+
     return (
       <>
         <h1 className="text-3xl text-center p-[25px]">TodoList</h1>
