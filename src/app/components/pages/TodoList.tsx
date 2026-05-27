@@ -1,10 +1,11 @@
 "use client";
 
 import { Button } from "../button/Button"
-import type { Status, Todo, TodoListItem } from "@/types/todo";
+import type { Status, TodoListItem } from "@/types/todo";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+
 
 
 export const isStatus = (value:string):value is Status =>{
@@ -34,6 +35,20 @@ export const TodoList = ({todos}:{todos:TodoListItem[]})=>{
       
         router.refresh()
       };
+
+    const handleDelete = async (id:number)=>{
+      const {error} = await supabase
+       .from ("todos")
+       .delete()
+       .eq("id",id)
+
+       if(error){
+        alert("error")
+        return
+       }
+       router.refresh()
+    }
+
 
     return(
         <>
@@ -74,7 +89,7 @@ export const TodoList = ({todos}:{todos:TodoListItem[]})=>{
                     hover:bg-gray-500
                   "
                     href={`/todos/${todo.id}`}>詳細</Link>
-                    <Button>削除</Button>
+                    <Button onClick={()=>handleDelete(todo.id)}>削除</Button>
                 </li>
             ))}
           </ul>

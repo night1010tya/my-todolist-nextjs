@@ -1,9 +1,8 @@
 "use client"
-import { ChangeEvent, FormEvent, useState } from "react";
+import { useState } from "react";
 import { Button } from "../button/Button";
-import { Status, Todo, TodoFormData } from "@/types/todo";
+import { Status, Todo} from "@/types/todo";
 import { supabase } from "@/lib/supabase";
-import { off } from "process";
 import { useRouter } from "next/navigation";
 import { isStatus } from "./TodoList";
 
@@ -45,33 +44,40 @@ type TodoFormProps = {
 
     const router = useRouter();
     
-    const handleSubmit = async(e:React.SubmitEvent<HTMLFormElement>)=>{
-      e.preventDefault()
-
-      const {error} = await supabase 
-      .from("todos")
-      .insert({
+    const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+      e.preventDefault();
+    
+      const todoData = {
         title,
-        content:content||null,
+        content: content || null,
         status,
-        startDate:startDate||null,
-        dueDate:dueDate||null,
-      });
-
+        startDate: startDate || null,
+        dueDate: dueDate || null,
+      };
+    
+      const { error } =
+        mode === "create"
+          ? await supabase.from("todos").insert(todoData)
+          : await supabase
+              .from("todos")
+              .update(todoData)
+              .eq("id", todo?.id);
+    
       if (error) {
         console.log("Supabase error:", error);
         alert(error.message);
         return;
       }
+    
       setTitle("");
       setStartDate("");
       setDueDate("");
       setStatus("todo");
       setContent("");
-
+    
       router.push("/");
       router.refresh();
-      }
+    };
 
     return (
       <form 

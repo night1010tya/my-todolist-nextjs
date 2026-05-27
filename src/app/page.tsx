@@ -1,5 +1,5 @@
 
-import { Todo, TodoListItem } from "@/types/todo";
+import { TodoListItem } from "@/types/todo";
 import { TodoList } from "./components/pages/TodoList";
 import { supabase } from "@/lib/supabase";
 
